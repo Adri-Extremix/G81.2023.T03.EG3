@@ -1,10 +1,11 @@
 """Contains the class OrderShipping"""
 from datetime import datetime
 import hashlib
-
+from freezegun import freeze_time
 class OrderShipping():
     """Class representing the information required for shipping of an order"""
 
+    @freeze_time("1900-01-01 00:00:00", tz_offset=-4)
     def __init__(self, product_id, order_id, delivery_email, order_type):
         self.__alg = "SHA-256"
         self.__type = "DS"
