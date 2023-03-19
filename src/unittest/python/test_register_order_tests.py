@@ -1,11 +1,18 @@
 """class for testing the regsiter_order method"""
+import json
 import unittest
+import os
+from pathlib import Path
 from freezegun import freeze_time
 from uc3m_logistics import order_manager, order_management_exception
 from uc3m_logistics import order_request
 @freeze_time("01-01-1900")
 class MyTestCase(unittest.TestCase):
     """class for testing the register_order method"""
+    def setUp(self) -> None:
+        file_store = str(Path.home()) + "store_patient.json"
+        if os.path.isfile(file_store):
+            os.remove(file_store)
     def test_something( self ):
         """dummy test"""
         self.assertEqual(True, False)
@@ -16,6 +23,14 @@ class MyTestCase(unittest.TestCase):
         my_order = order_manager.OrderManager()
         value = my_order.register_order("8421691423220", "REGULAR", "C/LISBOA,4, MADRID, SPAIN", "123456789", "28005")
         self.assertEqual("45a77da7acc49cc551fab69cb6e2ce4b",value)
+
+        with(open(file_store,"r",encoding="UTF-8", newline=""))as file:
+            data_list = json.load(file)
+        found = False
+        for item in data_list:
+            if item["_OrderRequest__order_id"] == "45a77da7acc49cc551fab69cb6e2ce4b":
+                found = True
+        self.assertTrue(found)
 
     def test_f1_NVt1(self):
         # not num
@@ -59,6 +74,14 @@ class MyTestCase(unittest.TestCase):
         value = my_order.register_order("8421691423220", "PREMIUM", "C/LISBOA,4, MADRID, SPAIN", "123456789", "28005")
         self.assertEqual("1529a75ad4abd5bafdc2981bd2d648e0",value)
 
+        with(open(file_store, "r", encoding="UTF-8", newline="")) as file:
+            data_list = json.load(file)
+        found = False
+        for item in data_list:
+            if item["_OrderRequest__order_id"] == "1529a75ad4abd5bafdc2981bd2d648e0":
+                found = True
+        self.assertTrue(found)
+
     def test_f1_NVt6(self):
         # not string
         my_order = order_manager.OrderManager()
@@ -78,6 +101,14 @@ class MyTestCase(unittest.TestCase):
         my_order = order_manager.OrderManager()
         value = my_order.register_order("8421691423220", "PREMIUM", "C/LISBOA,4,MADRID, SPAIN", "123456789", "28005")
         self.assertEqual("23505258223f8d9da00641c25ef3dd47",value)
+
+        with(open(file_store, "r", encoding="UTF-8", newline="")) as file:
+            data_list = json.load(file)
+        found = False
+        for item in data_list:
+            if item["_OrderRequest__order_id"] == "23505258223f8d9da00641c25ef3dd47":
+                found = True
+        self.assertTrue(found)
     def test_f1_NVt8(self):
         # not string
         my_order = order_manager.OrderManager()
@@ -91,11 +122,27 @@ class MyTestCase(unittest.TestCase):
         value = my_order.register_order("8421691423220", "PREMIUM", "C/LISBO MADRID, SPAIN", "123456789", "28005")
         self.assertEqual("0d79d3a8bb1008bcd10120b7f9ececfb", value)
 
+        with(open(file_store, "r", encoding="UTF-8", newline="")) as file:
+            data_list = json.load(file)
+        found = False
+        for item in data_list:
+            if item["_OrderRequest__order_id"] == "0d79d3a8bb1008bcd10120b7f9ececfb":
+                found = True
+        self.assertTrue(found)
+
     def test_f1_Vt5(self):
         # caso válido all corect
         my_order = order_manager.OrderManager()
         value = my_order.register_order("8421691423220", "PREMIUM", "C/LISBOA MADRID, SPAIN", "123456789", "28005")
         self.assertEqual("b79f15b28ca404f0aab3cbea1911a38c", value)
+
+        with(open(file_store, "r", encoding="UTF-8", newline="")) as file:
+            data_list = json.load(file)
+        found = False
+        for item in data_list:
+            if item["_OrderRequest__order_id"] == "b79f15b28ca404f0aab3cbea1911a38c":
+                found = True
+        self.assertTrue(found)
 
     def test_f1_Vt6(self):
         # caso válido all corect
@@ -105,6 +152,14 @@ class MyTestCase(unittest.TestCase):
                                                                         "aaaaaaa", "123456789", "28005")
         self.assertEqual("f8453670d7bcd85d4c2caa7aff980aca", value)
 
+        with(open(file_store, "r", encoding="UTF-8", newline="")) as file:
+            data_list = json.load(file)
+        found = False
+        for item in data_list:
+            if item["_OrderRequest__order_id"] == "f8453670d7bcd85d4c2caa7aff980aca":
+                found = True
+        self.assertTrue(found)
+
     def test_f1_Vt7(self):
         # caso válido all corect
         my_order = order_manager.OrderManager()
@@ -112,6 +167,14 @@ class MyTestCase(unittest.TestCase):
                                                                     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAaa"
                                                                     , "123456789", "28005")
         self.assertEqual("911bae296cfa927e0e81b4de9adce30b", value)
+
+        with(open(file_store, "r", encoding="UTF-8", newline="")) as file:
+            data_list = json.load(file)
+        found = False
+        for item in data_list:
+            if item["_OrderRequest__order_id"] == "911bae296cfa927e0e81b4de9adce30b":
+                found = True
+        self.assertTrue(found)
 
     def test_f1_NVt9(self):
         # not string
