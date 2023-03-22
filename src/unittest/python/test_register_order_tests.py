@@ -10,7 +10,7 @@ from uc3m_logistics import order_request
 class MyTestCase(unittest.TestCase):
     """class for testing the register_order method"""
     def setUp(self) -> None:
-        file_store = str(Path.home()) + "store_patient.json"
+        file_store = str(Path.home()) + "/home/adrian/PycharmProjects/G81.2023.T03.EG3/src/Json/Store/store.json"
         if os.path.isfile(file_store):
             os.remove(file_store)
     def test_something( self ):

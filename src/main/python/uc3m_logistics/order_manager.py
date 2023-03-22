@@ -1,9 +1,11 @@
 """Module """
-import hashlib
 import re
+import os
+from pathlib import Path
 from uc3m_logistics import order_request
 from uc3m_logistics import order_management_exception
-
+from uc3m_logistics import order_shipping
+from freezegun import freeze_time
 
 class OrderManager:
     """Class for providing the methods for managing the orders"""
@@ -99,3 +101,53 @@ class OrderManager:
         ord_requ = order_request.OrderRequest(productID, orderType, address, phoneNumber, zipCode)
         out = ord_requ.order_id
         return out
+    def send_code(self,json):
+        ########## Tiene que guardar el tracking code en el almacén
+
+        ##### Falta obtener la dirección del almacén
+        file_store = str(Path.home()) + "/PycharmProjects/G81.2023.T03.EG3/src/Json/Store/store.json"
+        if not os.path.isfile(file_store):
+            raise order_management_exception.OrderManagementException("There isn't any store")
+        ###### Falta hacer las comprobaciones de la función
+            #### Para comprobar que no está manipulado hay que volver a crear el OrderId con los datos del almacen
+            #### Para esto hay que congelar el tiempo con el tiempo del almacén o crear un nuevo objeto con los atributos
+            #### obtenidos en el almacén y forzar a que el tiempo sea el del antiguo
+
+        ##### Revisar que el formato con el que se escribe es el que se utiliza para indexar
+        try:
+            with open(file_store,encoding="utf8") as file:
+                data_list = json.load(file)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
+        try:
+            with open(json, encoding="utf8") as file:
+                dicc_json = json.load(file)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+        try:
+            for item in data_list:
+                if item["_OrderRequest__OrderId_"] == dicc_json["_OrderRequest__OrderId_"]:
+                    product_id = dicc_json["_OrderRequest__ProductId_"]
+                    order_id = dicc_json["_OrderRequest__OrderId_"]
+                    delivery_email = dicc_json["_OrderRequest__DeliveryEmail_"]
+                    order_type = dicc_json["_OrderRequest__Order_Type_"]
+                    ord_shi = order_shipping.OrderShipping(product_id, order_id, delivery_email, order_type)
+                    out = ord_shi.tracking_code
+                    ##################Falta escribir el tracking code = out en el almacén
+                    item["_OrderRequest_tracking_code_"] = out
+
+                    ## Con esto se debería poder parar el tiempo parar el tiempo a la hora de llamar a la función del hash
+                    my_freeze = freeze_time(item["_OrderRequest__Time_Stamp_"])
+                    #my_freeze.start()
+                    #my_freeze.stop()
+                    return out
+        except:
+            raise order_management_exception.OrderManagementException("Your OrderId doesn't exist")
+
+
+
