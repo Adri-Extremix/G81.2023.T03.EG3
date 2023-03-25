@@ -1,6 +1,7 @@
 """Module """
 import re
 import os
+import json
 from pathlib import Path
 from uc3m_logistics import order_request
 from uc3m_logistics import order_management_exception
@@ -70,7 +71,7 @@ class OrderManager:
         if type(orderType) != str:
             raise order_management_exception.OrderManagementException("Exception: orderType type not valid")
 
-        if orderType.upper() != "REGULAR" or orderType.upper() != "PREMIUM":
+        if orderType.upper() != "REGULAR" and orderType.upper() != "PREMIUM":
             raise order_management_exception.OrderManagementException("Exception: orderType not valid")
 
         if type(address) != str:
@@ -99,8 +100,35 @@ class OrderManager:
         except:
             raise order_management_exception.OrderManagementException("Exception : zipcode not valid")
 
+
+
+
         ord_requ = order_request.OrderRequest(productID, orderType, address, phoneNumber, zipCode)
         out = ord_requ.order_id
+        path = os.path.dirname(__file__)
+        path = path[:-26]
+        print(path)
+        path = os.path.join(path, "json")
+        print(path)
+
+
+        try:
+            with open(path + "/Almacen.JSON", "r", encoding="utf-8") as file:
+                #data = json.load(file)
+                #print(data)
+                data_list = json.load(file)
+
+
+
+        except FileNotFoundError as ex:
+            print("por aquí todo ok")
+            data_list = list();
+
+        data_list.append(ord_requ.__str__())
+        print(data_list)
+
+        with open(path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+            json.dump(data_list, file, indent=2)
         return out
 
     def send_code(self, json):

@@ -6,6 +6,7 @@ from pathlib import Path
 from freezegun import freeze_time
 from uc3m_logistics import order_manager, order_management_exception
 from uc3m_logistics import order_request
+
 @freeze_time("01-01-1900")
 class MyTestCase(unittest.TestCase):
     """class for testing the register_order method"""
@@ -24,7 +25,7 @@ class MyTestCase(unittest.TestCase):
         value = my_order.register_order("8421691423220", "REGULAR", "C/LISBOA,4, MADRID, SPAIN", "123456789", "28005")
         self.assertEqual("45a77da7acc49cc551fab69cb6e2ce4b",value)
 
-        with(open(file_store,"r",encoding="UTF-8", newline=""))as file:
+        with(open("../../json/Almacen.JSON", "r", encoding="utf-8", newline=""))as file:
             data_list = json.load(file)
         found = False
         for item in data_list:
