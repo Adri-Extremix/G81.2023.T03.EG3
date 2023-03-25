@@ -60,8 +60,15 @@ class OrderManager:
             return False
         return True
 
+    @property
+    def store_path(self):
+        # Path
+        path = os.path.dirname(__file__)
+        path = path[:-26]
+        return os.path.join(path, "json")
     def register_order(self, productID, orderType, address, phoneNumber, zipCode):
 
+        # INPUT VALIDATION
         if type(productID) != str:
             raise order_management_exception.OrderManagementException("Exception: Product Id type not valid")
 
@@ -100,46 +107,31 @@ class OrderManager:
         except:
             raise order_management_exception.OrderManagementException("Exception : zipcode not valid")
 
-
-
-
+        # GENERATES REQUEST
         ord_requ = order_request.OrderRequest(productID, orderType, address, phoneNumber, zipCode)
         out = ord_requ.order_id
-        path = os.path.dirname(__file__)
-        path = path[:-26]
-        print(path)
-        path = os.path.join(path, "json")
-        print(path)
 
-
+        # OPENS THE STORE_FILE. IF NOT EXISTS CREATES IT
         try:
-            with open(path + "/Almacen.JSON", "r", encoding="utf-8") as file:
-                #data = json.load(file)
-                #print(data)
+            with open(self.store_path + "/Almacen.JSON", "r", encoding="utf-8") as file:
                 data_list = json.load(file)
+        except FileNotFoundError:
+            data_list = []
 
-
-
-        except FileNotFoundError as ex:
-            print("por aquí todo ok")
-            data_list = list();
-
+        ## adds the hash to the file
         data_list.append(ord_requ.__dict__)
-        print(data_list)
-        print(type(data_list))
-        print(type(data_list[0]))
         data_list[-1]["_OrderRequest__order_id"] = out
 
-
-        with open(path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+        # WRITES EVERYTTHING ON STORE_FILE
+        with open(self.store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
             json.dump(data_list, file, indent=2)
+
+        # returns hash
         return out
 
     def send_code(self, json):
-        ########## Tiene que guardar el tracking code en el almacén / Hecho
 
-        ##### Falta obtener la dirección del almacén /Creo que hecho
-        file_store = str(Path.home()) + "/PycharmProjects/G81.2023.T03.EG3/src/Json/Store/store.json"
+        file_store = self.path + "/Almacen.JSON"
         if not os.path.isfile(file_store):
             raise order_management_exception.OrderManagementException("There isn't any store")
         ###### Falta hacer las comprobaciones de la función
