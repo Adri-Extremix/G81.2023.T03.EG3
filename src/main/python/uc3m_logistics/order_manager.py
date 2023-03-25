@@ -65,7 +65,7 @@ class OrderManager:
         # Path
         path = os.path.dirname(__file__)
         path = path[:-26]
-        return os.path.join(path, "json")
+        return os.path.join(path, "json/")
     def register_order(self, productID, orderType, address, phoneNumber, zipCode):
 
         # INPUT VALIDATION
@@ -115,7 +115,7 @@ class OrderManager:
 
         # OPENS THE STORE_FILE. IF NOT EXISTS CREATES IT
         try:
-            with open(self.store_path + "/Almacen.JSON", "r", encoding="utf-8") as file:
+            with open(self.store_path + "Almacen.JSON", "r", encoding="utf-8") as file:
                 data_list = json.load(file)
         except FileNotFoundError:
             data_list = []
@@ -125,15 +125,14 @@ class OrderManager:
         data_list[-1]["_OrderRequest__order_id"] = out
 
         # WRITES EVERYTTHING ON STORE_FILE
-        with open(self.store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+        with open(self.store_path + "Almacen.JSON", "w", encoding="utf-8", newline="") as file:
             json.dump(data_list, file, indent=2)
 
         # returns hash
         return out
 
     def send_code(self, json):
-
-        file_store = self.path + "/Almacen.JSON"
+        file_store = self.store_path + "Almacen.JSON"
         if not os.path.isfile(file_store):
             raise order_management_exception.OrderManagementException("There isn't any store")
         ###### Falta hacer las comprobaciones de la función
@@ -159,26 +158,26 @@ class OrderManager:
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
         try:
             for item in data_list:
-                if item["_OrderRequest__OrderId_"] == dicc_json["_OrderRequest__OrderId_"]:
-                    product_id = dicc_json["_OrderRequest__Product_Id_"]
-                    order_id = dicc_json["_OrderRequest__Order_Id_"]
-                    delivery_email = dicc_json["_OrderRequest__DeliveryEmail_"]
-                    order_type = dicc_json["_OrderRequest__Order_Type_"]
+                if item["_OrderRequest__OrderId_"] == dicc_json["OrderID"]:
+                    product_id = dicc_json["_OrderRequest__product_id"]
+                    order_id = dicc_json["_OrderRequest__order_id"]
+                    delivery_email = dicc_json["ContactEmail"]
+                    order_type = dicc_json["_OrderRequest__order_type"]
                     ord_shi = order_shipping.OrderShipping(product_id, order_id, delivery_email, order_type)
                     out = ord_shi.tracking_code
                     ##################Falta escribir el tracking code = out en el almacén / Hecho
-                    item["_OrderRequest_tracking_code_"] = out
+                    item["_OrderRequest__tracking_code_"] = out
 
                     # # Con esto se debería poder parar el tiempo parar el tiempo a la hora de llamar a la función
                     # del hash
-                    my_freeze = freeze_time(item["_OrderRequest__Time_Stamp_"])
+                    my_freeze = freeze_time(item["_OrderRequest__time_stamp"])
                     my_freeze.start()
                     req = order_request.OrderRequest(product_id, order_type,
-                                                     dicc_json["_OrderRequest__Delivery_Address_"],
-                                                     dicc_json["_OrderRequest__Phone_Number_"],
-                                                     dicc_json["_OrderRequest__Zip_Code_"])
+                                                     dicc_json["_OrderRequest__delivery_address"],
+                                                     dicc_json["_OrderRequest__phone_number"],
+                                                     dicc_json["_OrderRequest__zip_code"])
                     real_hash = req.order_id
-                    if real_hash != dicc_json["OrderRequest__Order_Id"]:
+                    if real_hash != dicc_json["OrderID"]:
                         raise order_management_exception.OrderManagementException("The hash has been manipulated")
                     # hash.time_stamp si no funciona el freeze utilizar el atributo privado para asignarlo a un nuevo
                     # objeto
