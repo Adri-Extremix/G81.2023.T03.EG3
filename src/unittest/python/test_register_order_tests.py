@@ -28,9 +28,9 @@ class MyTestCase(unittest.TestCase):
         with(open("../../json/Almacen.JSON", "r", encoding="utf-8", newline=""))as file:
             data_list = json.load(file)
         found = False
-        for item in data_list:
-            if item["_OrderRequest__order_id"] == "45a77da7acc49cc551fab69cb6e2ce4b":
-                found = True
+
+        if data_list[-1]["_OrderRequest__order_id"] == "45a77da7acc49cc551fab69cb6e2ce4b":
+            found = True
         self.assertTrue(found)
 
     def test_f1_NVt1(self):

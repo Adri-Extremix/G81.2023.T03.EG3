@@ -124,8 +124,12 @@ class OrderManager:
             print("por aquí todo ok")
             data_list = list();
 
-        data_list.append(ord_requ.__str__())
+        data_list.append(ord_requ.__dict__)
         print(data_list)
+        print(type(data_list))
+        print(type(data_list[0]))
+        data_list[-1]["_OrderRequest__order_id"] = out
+
 
         with open(path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
             json.dump(data_list, file, indent=2)
