@@ -65,7 +65,7 @@ class OrderManager:
         # Path
         path = os.path.dirname(__file__)
         path = path[:-26]
-        return os.path.join(path, "json")
+        return os.path.join(path, "json/")
     def register_order(self, productID, orderType, address, phoneNumber, zipCode):
 
         # INPUT VALIDATION
@@ -92,7 +92,6 @@ class OrderManager:
 
         if len(phoneNumber) != 9:
             raise order_management_exception.OrderManagementException("Exception : phone_number not valid")
-
         try:
             int(phoneNumber)
         except:
@@ -100,6 +99,8 @@ class OrderManager:
 
         if not isinstance(zipCode, str):
             raise order_management_exception.OrderManagementException("Exception : zipcode type not valid")
+        if (len(zipCode) != 5):
+            raise order_management_exception.OrderManagementException("Exception : zipcode not valid")
         try:
             aux_zip_code = int(zipCode)
             if (not (1000 <= aux_zip_code < 53000)):

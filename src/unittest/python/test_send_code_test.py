@@ -14,7 +14,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(True, False)
 
     @freeze_time("01-01-1900 00:00:00")
-    def test_f1_Vt1(self):
+    def test_f2_Vt1(self):
         # caso válido all corect
         file_store = str(Path.home()) + "/home/adrian/PycharmProjects/G81.2023.T03.EG3/src/Json/Store/store.json"
         if os.path.isfile(file_store):
@@ -34,7 +34,7 @@ class MyTestCase(unittest.TestCase):
         value = my_order.send_code(json)
         self.assertEqual("",value)
 
-    def test_f1_NVt1(self):
+    def test_f2_NVt1(self):
         file_store = str(Path.home()) + "/home/adrian/PycharmProjects/G81.2023.T03.EG3/src/Json/Store/store.json"
         if os.path.isfile(file_store):
             os.remove(file_store)
