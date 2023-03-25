@@ -131,9 +131,9 @@ class OrderManager:
         # returns hash
         return out
 
-    def send_code(self, json):
+    def send_code(self, input_file):
 
-        file_store = self.path + "/Almacen.JSON"
+        file_store = self.store_path + "/Almacen.JSON"
         if not os.path.isfile(file_store):
             raise order_management_exception.OrderManagementException("There isn't any store")
         ###### Falta hacer las comprobaciones de la función
@@ -143,7 +143,8 @@ class OrderManager:
 
         ##### Revisar que el formato con el que se escribe en el JSON es el que se utiliza para indexar
         try:
-            with open(file_store, encoding="utf8") as file:
+            with open(file_store, "r", encoding="utf8") as file:
+                print(file)
                 data_list = json.load(file)
         except FileNotFoundError as ex:
             raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
@@ -151,7 +152,7 @@ class OrderManager:
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         try:
-            with open(json, encoding="utf8") as file:
+            with open(input_file, "r", encoding="utf8") as file:
                 dicc_json = json.load(file)
         except FileNotFoundError as ex:
             raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
@@ -159,19 +160,22 @@ class OrderManager:
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
         try:
             for item in data_list:
-                if item["_OrderRequest__OrderId_"] == dicc_json["_OrderRequest__OrderId_"]:
-                    product_id = dicc_json["_OrderRequest__Product_Id_"]
-                    order_id = dicc_json["_OrderRequest__Order_Id_"]
-                    delivery_email = dicc_json["_OrderRequest__DeliveryEmail_"]
-                    order_type = dicc_json["_OrderRequest__Order_Type_"]
+
+                if item["_OrderRequest__order_id"] == dicc_json["OrderID"]:
+                    print(item)
+                    product_id = item["_OrderRequest__product_id"]
+                    order_id = item["_OrderRequest__order_id"]
+                    delivery_email = dicc_json["ContactEmail"]
+                    order_type = item["_OrderRequest__order_type"]
                     ord_shi = order_shipping.OrderShipping(product_id, order_id, delivery_email, order_type)
                     out = ord_shi.tracking_code
+                    print("out =" + str(out))
                     ##################Falta escribir el tracking code = out en el almacén / Hecho
                     item["_OrderRequest_tracking_code_"] = out
 
                     # # Con esto se debería poder parar el tiempo parar el tiempo a la hora de llamar a la función
                     # del hash
-                    my_freeze = freeze_time(item["_OrderRequest__Time_Stamp_"])
+                    my_freeze = freeze_time(str(item["_OrderRequest__time_stamp"]))
                     my_freeze.start()
                     req = order_request.OrderRequest(product_id, order_type,
                                                      dicc_json["_OrderRequest__Delivery_Address_"],
@@ -183,7 +187,6 @@ class OrderManager:
                     # hash.time_stamp si no funciona el freeze utilizar el atributo privado para asignarlo a un nuevo
                     # objeto
                     my_freeze.stop()
-
                     return out
         except:
             raise order_management_exception.OrderManagementException("Your OrderId doesn't exist")

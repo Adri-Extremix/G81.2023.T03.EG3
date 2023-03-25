@@ -5,7 +5,7 @@ import os
 from freezegun import freeze_time
 from uc3m_logistics import order_manager, order_management_exception
 
-@freeze_time("01-01-1900")
+@freeze_time("01-01-2000")
 class MyTestCase(unittest.TestCase):
     """class for testing the register_order method"""
     def setUp(self) -> None:
@@ -14,12 +14,12 @@ class MyTestCase(unittest.TestCase):
         if os.path.isfile(file_store):
             os.remove(file_store)
 
-    @freeze_time("01-01-1900 00:00:00")
+    @freeze_time("01-01-2000 00:00:00")
     def test_f1_Vt1(self):
 
         my_order = order_manager.OrderManager()
         value = my_order.register_order("8421691423220", "REGULAR", "C/LISBOA,4, MADRID, SPAIN", "123456789", "28005")
-        self.assertEqual("45a77da7acc49cc551fab69cb6e2ce4b",value)
+        self.assertEqual("e39ed19e25d6c4f0b2ed5bf610e043b4",value)
 
         with(open("../../json/Almacen.JSON", "r", encoding="utf-8", newline=""))as file:
             data_list = json.load(file)
