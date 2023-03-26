@@ -144,7 +144,6 @@ class OrderManager:
         ##### Revisar que el formato con el que se escribe en el JSON es el que se utiliza para indexar
         try:
             with open(file_store, "r", encoding="utf8") as file:
-                print(file)
                 data_list = json.load(file)
         except FileNotFoundError as ex:
             raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
@@ -158,35 +157,55 @@ class OrderManager:
             raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
         except json.JSONDecodeError as ex:
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+        claves = tuple(dicc_json.keys())
+        print(claves)
+        if len(claves) != 2:
+            raise order_management_exception.OrderManagementException("There are too/few keys")
+        if claves[0] != "OrderID":
+            raise order_management_exception.OrderManagementException("Incorrect keys")
+        if claves[1] != "ContactEmail":
+            raise order_management_exception.OrderManagementException("Incorrect keys")
+        if not re.fullmatch('^[0-9|a-z]{32}$', dicc_json["OrderID"]):
+            raise order_management_exception.OrderManagementException("Wrong Hash")
+        if not re.fullmatch('^[0-9|a-z]*[@][0-9|a-z]*[.][0-9|a-z]*$', dicc_json["ContactEmail"]):
+            raise order_management_exception.OrderManagementException("Wrong Contact Email")
+
         try:
             for item in data_list:
-
                 if item["_OrderRequest__order_id"] == dicc_json["OrderID"]:
-                    print(item)
+                    #print(item)
                     product_id = item["_OrderRequest__product_id"]
                     order_id = item["_OrderRequest__order_id"]
                     delivery_email = dicc_json["ContactEmail"]
                     order_type = item["_OrderRequest__order_type"]
+                    print(order_shipping.OrderShipping(product_id, order_id, delivery_email, order_type))
                     ord_shi = order_shipping.OrderShipping(product_id, order_id, delivery_email, order_type)
                     out = ord_shi.tracking_code
                     print("out =" + str(out))
                     ##################Falta escribir el tracking code = out en el almacén / Hecho
                     item["_OrderRequest_tracking_code_"] = out
 
+
+
+
                     # # Con esto se debería poder parar el tiempo parar el tiempo a la hora de llamar a la función
                     # del hash
-                    my_freeze = freeze_time(str(item["_OrderRequest__time_stamp"]))
-                    my_freeze.start()
+                    #my_freeze = freeze_time(str(int(item["_OrderRequest__time_stamp"])))
+                    #my_freeze.start()
                     req = order_request.OrderRequest(product_id, order_type,
-                                                     dicc_json["_OrderRequest__Delivery_Address_"],
-                                                     dicc_json["_OrderRequest__Phone_Number_"],
-                                                     dicc_json["_OrderRequest__Zip_Code_"])
+                                                     item["_OrderRequest__delivery_address"],
+                                                     item["_OrderRequest__phone_number"],
+                                                     item["_OrderRequest__zip_code"])
+                    req.time_stamp = item["_OrderRequest__time_stamp"]
                     real_hash = req.order_id
-                    if real_hash != dicc_json["OrderRequest__Order_Id"]:
+
+                    if real_hash != dicc_json["OrderID"]:
                         raise order_management_exception.OrderManagementException("The hash has been manipulated")
                     # hash.time_stamp si no funciona el freeze utilizar el atributo privado para asignarlo a un nuevo
                     # objeto
-                    my_freeze.stop()
+                    #my_freeze.stop()
+
+
                     return out
         except:
             raise order_management_exception.OrderManagementException("Your OrderId doesn't exist")

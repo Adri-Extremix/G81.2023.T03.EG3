@@ -10,7 +10,7 @@ class MyTestCase(unittest.TestCase):
     """class for testing the register_order method"""
     def setUp(self) -> None:
         a = order_manager.OrderManager()
-        file_store = a.store_path + "Almacen.JSON"
+        file_store = a.store_path + "/Almacen.JSON"
         if os.path.isfile(file_store):
             os.remove(file_store)
 

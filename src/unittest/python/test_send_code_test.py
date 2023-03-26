@@ -39,6 +39,8 @@ class MyTestCase(unittest.TestCase):
                 json.dump(dicc_json, file, indent=2)
         except FileNotFoundError as ex:
             raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         #### Falta borrar y crear el almacen
         my_order = order_manager.OrderManager()
@@ -48,8 +50,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_f2_NVt1(self):
         # elimniar el almacen
-        file_store = store_path + "/f2_vt1.json"
-        if os.path.isfile(store_path + "/Almance.JSON"):
+        input_file = store_path + "/f2_nvt1.json"
+        if os.path.isfile(store_path + "/Almacen.JSON"):
             os.remove(store_path + "/Almacen.JSON")
         # Orden de ejemplo en el almacen
         dicc_json = []
@@ -62,15 +64,17 @@ class MyTestCase(unittest.TestCase):
                     "_OrderRequest__order_id": "45a77da7acc49cc551fab69cb6e2ce4b"}
         dicc_json.append(order_ex)
         try:
-            with open(file_store, "w", encoding="utf-8", newline="") as file:
+            with open(store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
                 json.dump(dicc_json, file, indent=2)
         except FileNotFoundError as ex:
             raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
         with self.assertRaises(order_management_exception.OrderManagementException) as cm:
-            my_order.send_code(file_store)
-        self.assertEqual("", cm.exception.message)
+            my_order.send_code(input_file)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
 
 
 

@@ -65,3 +65,8 @@ class OrderRequest:
     def zip_code( self ):
         """Returns the patient's zip_code"""
         return self.__zip_code
+
+    @time_stamp.setter
+    def time_stamp(self, value):
+        self.__time_stamp = value
+
