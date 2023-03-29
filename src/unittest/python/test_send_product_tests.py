@@ -19,7 +19,6 @@ class MyTestCase(unittest.TestCase):
 
     @freeze_time("01-01-2000 00:00:00")
     def test_f3_Vt1(self):
-        # elimniar el almacen
         input_file = store_path + "/f3_vt1.json"
         if os.path.isfile(store_path + "/Almancen.JSON"):
             os.remove(store_path + "/Almacenf1.JSON")
