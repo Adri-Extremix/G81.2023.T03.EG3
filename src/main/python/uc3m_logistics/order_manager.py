@@ -70,7 +70,8 @@ class OrderManager:
     def register_order(self, product_id, order_type, address, phone_number, zip_code):
 
         # INPUT VALIDATION
-        if isinstance(product_id) != str:
+        if not isinstance(product_id, str):
+
             raise order_management_exception.OrderManagementException\
                 ("Exception: Product Id type not valid")
 
@@ -78,7 +79,7 @@ class OrderManager:
             raise order_management_exception.OrderManagementException\
                 ("Exception: Product Id not valid")
 
-        if isinstance(order_type) != str:
+        if not isinstance(order_type, str):
             raise order_management_exception.OrderManagementException\
                 ("Exception: orderType type not valid")
 
@@ -86,7 +87,7 @@ class OrderManager:
             raise order_management_exception.OrderManagementException\
                 ("Exception: orderType not valid")
 
-        if isinstance(address) != str:
+        if not isinstance(address, str):
             raise order_management_exception.OrderManagementException\
                 ("Exception : address type not valid")
 
