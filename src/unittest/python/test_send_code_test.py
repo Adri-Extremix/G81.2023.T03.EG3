@@ -10,11 +10,11 @@ from uc3m_logistics import order_request
 store_path = os.path.dirname(__file__)[:-15] + "json"
 print("path: " + store_path)
 
-@freeze_time("01-01-1900")
+@freeze_time("01-01-2000")
 class MyTestCase(unittest.TestCase):
     """class for testing the register_order method"""
 
-    @freeze_time("01-01-1900 00:00:00")
+    @freeze_time("01-01-2000 00:00:00")
     def test_f2_Vt1(self):
         # elimniar el almacen
         input_file = store_path + "/f2_vt1.json"
@@ -1113,7 +1113,7 @@ class MyTestCase(unittest.TestCase):
         my_order = order_manager.OrderManager()
         with self.assertRaises(order_management_exception.OrderManagementException) as cm:
             my_order.send_code(input_file)
-        self.assertEqual("Incorrect keys", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
 
     def test_f2_Vt2(self):
         # elimniar el almacen
@@ -1146,8 +1146,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual("5856fbd8f18ad8381d45e0efe946025037a3dfe689f285c1dab0b48ef91df0f0", value)
 
     def test_f2_NVt38(self):
-        # TODO
-        """del """
+        """del idmail"""
         # elimniar el almacen
         input_file = store_path + "/f2_nvt38.json"
         if os.path.isfile(store_path + "/Almacen.JSON"):
@@ -1173,10 +1172,10 @@ class MyTestCase(unittest.TestCase):
         my_order = order_manager.OrderManager()
         with self.assertRaises(order_management_exception.OrderManagementException) as cm:
             my_order.send_code(input_file)
-        self.assertEqual("Incorrect keys", cm.exception.message)
+        self.assertEqual("Wrong Contact Email", cm.exception.message)
 
     def test_f2_NVt39(self):
-        """del arroba"""
+        """dup arroba"""
         # elimniar el almacen
         input_file = store_path + "/f2_nvt39.json"
         if os.path.isfile(store_path + "/Almacen.JSON"):
@@ -1204,7 +1203,7 @@ class MyTestCase(unittest.TestCase):
             my_order.send_code(input_file)
         self.assertEqual("Wrong Contact Email", cm.exception.message)
     def test_f2_NVt40(self):
-        """dup dominio"""
+        """del @"""
         # elimniar el almacen
         input_file = store_path + "/f2_nvt40.json"
         if os.path.isfile(store_path + "/Almacen.JSON"):
@@ -1232,8 +1231,38 @@ class MyTestCase(unittest.TestCase):
             my_order.send_code(input_file)
         self.assertEqual("Wrong Contact Email", cm.exception.message)
 
-    def test_f2_NVt41(self):
+    def test_f2_Vt3(self):
         """dup dominio"""
+        # elimniar el almacen
+        input_file = store_path + "/f2_vt3.json"
+        if os.path.isfile(store_path + "/Almancen.JSON"):
+            os.remove(store_path + "/Almacen.JSON")
+        # Orden de ejemplo en el almacen
+        dicc_json = []
+        order_ex = {"_OrderRequest__product_id": "8421691423220",
+                    "_OrderRequest__delivery_address": "C/LISBOA,4, MADRID, SPAIN",
+                    "_OrderRequest__order_type": "REGULAR",
+                    "_OrderRequest__phone_number": "123456789",
+                    "_OrderRequest__zip_code": "28005",
+                    "_OrderRequest__time_stamp": 946684800.0,
+                    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4"}
+        dicc_json.append(order_ex)
+        try:
+            with open(store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                json.dump(dicc_json, file, indent=2)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
+        #### Falta borrar y crear el almacen
+        my_order = order_manager.OrderManager()
+        ########## Falta dar la dirección del json
+        value = my_order.send_code(input_file)
+        self.assertEqual("5856fbd8f18ad8381d45e0efe946025037a3dfe689f285c1dab0b48ef91df0f0", value)
+
+    def test_f2_NVt41(self):
+        """del dominio"""
         # elimniar el almacen
         input_file = store_path + "/f2_nvt41.json"
         if os.path.isfile(store_path + "/Almacen.JSON"):
@@ -1261,7 +1290,354 @@ class MyTestCase(unittest.TestCase):
             my_order.send_code(input_file)
         self.assertEqual("Wrong Contact Email", cm.exception.message)
 
+    def test_f2_NVt42(self):
+        """dup ."""
+        # elimniar el almacen
+        input_file = store_path + "/f2_nvt42.json"
+        if os.path.isfile(store_path + "/Almacen.JSON"):
+            os.remove(store_path + "/Almacen.JSON")
+        # Orden de ejemplo en el almacen
+        dicc_json = []
+        order_ex = {"_OrderRequest__product_id": "8421691423220",
+                    "_OrderRequest__delivery_address": "C/LISBOA,4, MADRID, SPAIN",
+                    "_OrderRequest__order_type": "REGULAR",
+                    "_OrderRequest__phone_number": "123456789",
+                    "_OrderRequest__zip_code": "28005",
+                    "_OrderRequest__time_stamp": 946684800.0,
+                    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4"}
+        dicc_json.append(order_ex)
+        try:
+            with open(store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                json.dump(dicc_json, file, indent=2)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
+        my_order = order_manager.OrderManager()
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+            my_order.send_code(input_file)
+        self.assertEqual("Wrong Contact Email", cm.exception.message)
+
+    def test_f2_NVt43(self):
+        """del ."""
+        # elimniar el almacen
+        input_file = store_path + "/f2_nvt43.json"
+        if os.path.isfile(store_path + "/Almacen.JSON"):
+            os.remove(store_path + "/Almacen.JSON")
+        # Orden de ejemplo en el almacen
+        dicc_json = []
+        order_ex = {"_OrderRequest__product_id": "8421691423220",
+                    "_OrderRequest__delivery_address": "C/LISBOA,4, MADRID, SPAIN",
+                    "_OrderRequest__order_type": "REGULAR",
+                    "_OrderRequest__phone_number": "123456789",
+                    "_OrderRequest__zip_code": "28005",
+                    "_OrderRequest__time_stamp": 946684800.0,
+                    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4"}
+        dicc_json.append(order_ex)
+        try:
+            with open(store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                json.dump(dicc_json, file, indent=2)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
+        my_order = order_manager.OrderManager()
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+            my_order.send_code(input_file)
+        self.assertEqual("Wrong Contact Email", cm.exception.message)
+
+    def test_f2_NVt44(self):
+        """mod ."""
+        # elimniar el almacen
+        input_file = store_path + "/f2_nvt44.json"
+        if os.path.isfile(store_path + "/Almacen.JSON"):
+            os.remove(store_path + "/Almacen.JSON")
+        # Orden de ejemplo en el almacen
+        dicc_json = []
+        order_ex = {"_OrderRequest__product_id": "8421691423220",
+                    "_OrderRequest__delivery_address": "C/LISBOA,4, MADRID, SPAIN",
+                    "_OrderRequest__order_type": "REGULAR",
+                    "_OrderRequest__phone_number": "123456789",
+                    "_OrderRequest__zip_code": "28005",
+                    "_OrderRequest__time_stamp": 946684800.0,
+                    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4"}
+        dicc_json.append(order_ex)
+        try:
+            with open(store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                json.dump(dicc_json, file, indent=2)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
+        my_order = order_manager.OrderManager()
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+            my_order.send_code(input_file)
+        self.assertEqual("Wrong Contact Email", cm.exception.message)
+
+    def test_f2_Vt4(self):
+        """dup extension"""
+        ## elimniar el almacen
+        input_file = store_path + "/f2_vt4.json"
+        if os.path.isfile(store_path + "/Almancen.JSON"):
+            os.remove(store_path + "/Almacen.JSON")
+        # Orden de ejemplo en el almacen
+        dicc_json = []
+        order_ex = {"_OrderRequest__product_id": "8421691423220",
+                    "_OrderRequest__delivery_address": "C/LISBOA,4, MADRID, SPAIN",
+                    "_OrderRequest__order_type": "REGULAR",
+                    "_OrderRequest__phone_number": "123456789",
+                    "_OrderRequest__zip_code": "28005",
+                    "_OrderRequest__time_stamp": 946684800.0,
+                    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4"}
+        dicc_json.append(order_ex)
+        try:
+            with open(store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                json.dump(dicc_json, file, indent=2)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
+        #### Falta borrar y crear el almacen
+        my_order = order_manager.OrderManager()
+        ########## Falta dar la dirección del json
+        value = my_order.send_code(input_file)
+        self.assertEqual("5856fbd8f18ad8381d45e0efe946025037a3dfe689f285c1dab0b48ef91df0f0", value)
+
+    def test_f2_NVt46(self):
+        """mod \" """
+        # elimniar el almacen
+        input_file = store_path + "/f2_nvt46.json"
+        if os.path.isfile(store_path + "/Almacen.JSON"):
+            os.remove(store_path + "/Almacen.JSON")
+        # Orden de ejemplo en el almacen
+        dicc_json = []
+        order_ex = {"_OrderRequest__product_id": "8421691423220",
+                    "_OrderRequest__delivery_address": "C/LISBOA,4, MADRID, SPAIN",
+                    "_OrderRequest__order_type": "REGULAR",
+                    "_OrderRequest__phone_number": "123456789",
+                    "_OrderRequest__zip_code": "28005",
+                    "_OrderRequest__time_stamp": 946684800.0,
+                    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4"}
+        dicc_json.append(order_ex)
+        try:
+            with open(store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                json.dump(dicc_json, file, indent=2)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
+        my_order = order_manager.OrderManager()
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+            my_order.send_code(input_file)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+
+    def test_f2_NVt47(self):
+        """mod OrderID """
+        # elimniar el almacen
+        input_file = store_path + "/f2_nvt47.json"
+        if os.path.isfile(store_path + "/Almacen.JSON"):
+            os.remove(store_path + "/Almacen.JSON")
+        # Orden de ejemplo en el almacen
+        dicc_json = []
+        order_ex = {"_OrderRequest__product_id": "8421691423220",
+                    "_OrderRequest__delivery_address": "C/LISBOA,4, MADRID, SPAIN",
+                    "_OrderRequest__order_type": "REGULAR",
+                    "_OrderRequest__phone_number": "123456789",
+                    "_OrderRequest__zip_code": "28005",
+                    "_OrderRequest__time_stamp": 946684800.0,
+                    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4"}
+        dicc_json.append(order_ex)
+        try:
+            with open(store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                json.dump(dicc_json, file, indent=2)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
+        my_order = order_manager.OrderManager()
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+            my_order.send_code(input_file)
+        self.assertEqual("Incorrect keys", cm.exception.message)
+
+    def test_f2_NVt48(self):
+        """mod id """
+        # elimniar el almacen
+        input_file = store_path + "/f2_nvt48.json"
+        if os.path.isfile(store_path + "/Almacen.JSON"):
+            os.remove(store_path + "/Almacen.JSON")
+        # Orden de ejemplo en el almacen
+        dicc_json = []
+        order_ex = {"_OrderRequest__product_id": "8421691423220",
+                    "_OrderRequest__delivery_address": "C/LISBOA,4, MADRID, SPAIN",
+                    "_OrderRequest__order_type": "REGULAR",
+                    "_OrderRequest__phone_number": "123456789",
+                    "_OrderRequest__zip_code": "28005",
+                    "_OrderRequest__time_stamp": 946684800.0,
+                    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4"}
+        dicc_json.append(order_ex)
+        try:
+            with open(store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                json.dump(dicc_json, file, indent=2)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
+        my_order = order_manager.OrderManager()
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+            my_order.send_code(input_file)
+        self.assertEqual("Wrong Hash", cm.exception.message)
+
+    def test_f2_NVt49(self):
+        """mod ContactEmail"""
+        # elimniar el almacen
+        input_file = store_path + "/f2_nvt49.json"
+        if os.path.isfile(store_path + "/Almacen.JSON"):
+            os.remove(store_path + "/Almacen.JSON")
+        # Orden de ejemplo en el almacen
+        dicc_json = []
+        order_ex = {"_OrderRequest__product_id": "8421691423220",
+                    "_OrderRequest__delivery_address": "C/LISBOA,4, MADRID, SPAIN",
+                    "_OrderRequest__order_type": "REGULAR",
+                    "_OrderRequest__phone_number": "123456789",
+                    "_OrderRequest__zip_code": "28005",
+                    "_OrderRequest__time_stamp": 946684800.0,
+                    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4"}
+        dicc_json.append(order_ex)
+        try:
+            with open(store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                json.dump(dicc_json, file, indent=2)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
+        my_order = order_manager.OrderManager()
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+            my_order.send_code(input_file)
+        self.assertEqual("Incorrect keys", cm.exception.message)
+
+    def test_f2_NVt50(self):
+        """mod email"""
+        # elimniar el almacen
+        input_file = store_path + "/f2_nvt50.json"
+        if os.path.isfile(store_path + "/Almacen.JSON"):
+            os.remove(store_path + "/Almacen.JSON")
+        # Orden de ejemplo en el almacen
+        dicc_json = []
+        order_ex = {"_OrderRequest__product_id": "8421691423220",
+                    "_OrderRequest__delivery_address": "C/LISBOA,4, MADRID, SPAIN",
+                    "_OrderRequest__order_type": "REGULAR",
+                    "_OrderRequest__phone_number": "123456789",
+                    "_OrderRequest__zip_code": "28005",
+                    "_OrderRequest__time_stamp": 946684800.0,
+                    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4"}
+        dicc_json.append(order_ex)
+        try:
+            with open(store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                json.dump(dicc_json, file, indent=2)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
+        my_order = order_manager.OrderManager()
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+            my_order.send_code(input_file)
+        self.assertEqual("Wrong Contact Email", cm.exception.message)
+
+    def test_f2_NVt51(self):
+        """mod @"""
+        # elimniar el almacen
+        input_file = store_path + "/f2_nvt51.json"
+        if os.path.isfile(store_path + "/Almacen.JSON"):
+            os.remove(store_path + "/Almacen.JSON")
+        # Orden de ejemplo en el almacen
+        dicc_json = []
+        order_ex = {"_OrderRequest__product_id": "8421691423220",
+                    "_OrderRequest__delivery_address": "C/LISBOA,4, MADRID, SPAIN",
+                    "_OrderRequest__order_type": "REGULAR",
+                    "_OrderRequest__phone_number": "123456789",
+                    "_OrderRequest__zip_code": "28005",
+                    "_OrderRequest__time_stamp": 946684800.0,
+                    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4"}
+        dicc_json.append(order_ex)
+        try:
+            with open(store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                json.dump(dicc_json, file, indent=2)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
+        my_order = order_manager.OrderManager()
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+            my_order.send_code(input_file)
+        self.assertEqual("Wrong Contact Email", cm.exception.message)
+
+    def test_f2_NVt52(self):
+        """mod dominio"""
+        # elimniar el almacen
+        input_file = store_path + "/f2_nvt52.json"
+        if os.path.isfile(store_path + "/Almacen.JSON"):
+            os.remove(store_path + "/Almacen.JSON")
+        # Orden de ejemplo en el almacen
+        dicc_json = []
+        order_ex = {"_OrderRequest__product_id": "8421691423220",
+                    "_OrderRequest__delivery_address": "C/LISBOA,4, MADRID, SPAIN",
+                    "_OrderRequest__order_type": "REGULAR",
+                    "_OrderRequest__phone_number": "123456789",
+                    "_OrderRequest__zip_code": "28005",
+                    "_OrderRequest__time_stamp": 946684800.0,
+                    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4"}
+        dicc_json.append(order_ex)
+        try:
+            with open(store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                json.dump(dicc_json, file, indent=2)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
+        my_order = order_manager.OrderManager()
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+            my_order.send_code(input_file)
+        self.assertEqual("Wrong Contact Email", cm.exception.message)
+
+    def test_f2_NVt53(self):
+        """mod extension"""
+        # elimniar el almacen
+        input_file = store_path + "/f2_nvt53.json"
+        if os.path.isfile(store_path + "/Almacen.JSON"):
+            os.remove(store_path + "/Almacen.JSON")
+        # Orden de ejemplo en el almacen
+        dicc_json = []
+        order_ex = {"_OrderRequest__product_id": "8421691423220",
+                    "_OrderRequest__delivery_address": "C/LISBOA,4, MADRID, SPAIN",
+                    "_OrderRequest__order_type": "REGULAR",
+                    "_OrderRequest__phone_number": "123456789",
+                    "_OrderRequest__zip_code": "28005",
+                    "_OrderRequest__time_stamp": 946684800.0,
+                    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4"}
+        dicc_json.append(order_ex)
+        try:
+            with open(store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                json.dump(dicc_json, file, indent=2)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
+        my_order = order_manager.OrderManager()
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+            my_order.send_code(input_file)
+        self.assertEqual("Wrong Contact Email", cm.exception.message)
 
 if __name__ == '__main__':
     unittest.main()
