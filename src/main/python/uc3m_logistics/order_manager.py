@@ -6,6 +6,7 @@ from pathlib import Path
 from uc3m_logistics import order_request
 from uc3m_logistics import order_management_exception
 from uc3m_logistics import order_shipping
+from datetime import datetime
 from freezegun import freeze_time
 
 
@@ -165,9 +166,9 @@ class OrderManager:
             raise order_management_exception.OrderManagementException("Incorrect keys")
         if claves[1] != "ContactEmail":
             raise order_management_exception.OrderManagementException("Incorrect keys")
-        if not re.fullmatch('^[0-9|a-z]{32}$', dicc_json["OrderID"]):
+        if not re.fullmatch('^[0-9|a-f]{32}$', dicc_json["OrderID"]):
             raise order_management_exception.OrderManagementException("Wrong Hash")
-        if not re.fullmatch('^[0-9|a-z]*[@][0-9|a-z]*[.][0-9|a-z]*$', dicc_json["ContactEmail"]):
+        if not re.fullmatch('^[0-9|a-z][0-9|a-z]*[@][0-9|a-z][0-9|a-z]*[.][0-9|a-z][0-9|a-z]*$', dicc_json["ContactEmail"]):
             raise order_management_exception.OrderManagementException("Wrong Contact Email")
 
         try:
@@ -183,15 +184,10 @@ class OrderManager:
                     out = ord_shi.tracking_code
                     print("out =" + str(out))
                     ##################Falta escribir el tracking code = out en el almacén / Hecho
-                    item["_OrderRequest_tracking_code_"] = out
-
-
-
-
-                    # # Con esto se debería poder parar el tiempo parar el tiempo a la hora de llamar a la función
-                    # del hash
-                    #my_freeze = freeze_time(str(int(item["_OrderRequest__time_stamp"])))
-                    #my_freeze.start()
+                    item["_OrderRequest__delivery_day_"] = ord_shi.delivery_day
+                    item["_OrderRequest__tracking_code_"] = out
+                    with open(self.store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                        json.dump(data_list, file, indent=2)
                     req = order_request.OrderRequest(product_id, order_type,
                                                      item["_OrderRequest__delivery_address"],
                                                      item["_OrderRequest__phone_number"],
@@ -201,11 +197,29 @@ class OrderManager:
 
                     if real_hash != dicc_json["OrderID"]:
                         raise order_management_exception.OrderManagementException("The hash has been manipulated")
-                    # hash.time_stamp si no funciona el freeze utilizar el atributo privado para asignarlo a un nuevo
-                    # objeto
-                    #my_freeze.stop()
-
-
                     return out
         except:
             raise order_management_exception.OrderManagementException("Your OrderId doesn't exist")
+    def send_product(self,tracking_number):
+        file_store = self.store_path + "/Almacen.JSON"
+        if not os.path.isfile(file_store):
+            raise order_management_exception.OrderManagementException("There isn't any store")
+        if not re.fullmatch('^[0-9|a-f]{64}$', tracking_number):
+            raise order_management_exception.OrderManagementException("Wrong Hash")
+        try:
+            with open(file_store, "r", encoding="utf8") as file:
+                data_list = json.load(file)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format")
+        for item in data_list:
+            if item["_OrderRequest__tracking_code_"] == tracking_number:
+                if item["_OrderRequest_delivery_day_"] != datetime.timestamp(datetime.utcnow()):
+                    raise order_management_exception.OrderManagementException("The delivery day isn't today")
+                with open(self.store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                    json.dump(data_list, file, indent=2)
+
+
+
+

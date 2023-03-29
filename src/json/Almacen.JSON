@@ -6,6 +6,8 @@
     "_OrderRequest__phone_number": "123456789",
     "_OrderRequest__zip_code": "28005",
     "_OrderRequest__time_stamp": 946684800.0,
-    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4"
+    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4",
+    "_OrderRequest__delivery_day_": -2208888000.0,
+    "_OrderRequest__tracking_code_": "5856fbd8f18ad8381d45e0efe946025037a3dfe689f285c1dab0b48ef91df0f0"
   }
 ]
