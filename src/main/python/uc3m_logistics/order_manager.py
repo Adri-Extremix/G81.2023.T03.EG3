@@ -3,9 +3,9 @@ import re
 import os
 import json
 from datetime import datetime
-from uc3m_logistics import order_request
-from uc3m_logistics import order_management_exception
-from uc3m_logistics import order_shipping
+from .order_shipping import OrderShipping
+from .order_request import OrderRequest
+from .order_management_exception import OrderManagementException
 
 
 
@@ -72,60 +72,60 @@ class OrderManager:
         # INPUT VALIDATION
         if not isinstance(product_id, str):
 
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Exception: Product Id type not valid")
 
         if not self.validate_ean13(product_id):
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Exception: Product Id not valid")
 
         if not isinstance(order_type, str):
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Exception: orderType type not valid")
 
         if order_type.upper() != "REGULAR" and order_type.upper() != "PREMIUM":
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Exception: orderType not valid")
 
         if not isinstance(address, str):
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Exception : address type not valid")
 
         if not self.validate_address(address):
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Exception : address not valid")
 
         if not isinstance(phone_number, str):
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Exception : phone_number type not valid")
 
         if len(phone_number) != 9:
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Exception : phone_number not valid")
 
         try:
             int(phone_number)
         except:
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Exception : phone_number not valid")
 
         if not isinstance(zip_code, str):
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Exception : zipcode type not valid")
         if (len(zip_code) != 5):
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Exception : zipcode not valid")
         try:
             aux_zip_code = int(zip_code)
             if (not (1000 <= aux_zip_code < 53000)):
-                raise order_management_exception.OrderManagementException\
+                raise OrderManagementException\
                     ("Exception : zipcode doesn't exists")
         except:
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Exception : zipcode not valid")
 
         # GENERATES REQUEST
-        ord_requ = order_request.OrderRequest(product_id, order_type, address, phone_number, zip_code)
+        ord_requ = OrderRequest(product_id, order_type, address, phone_number, zip_code)
         out = ord_requ.order_id
 
         # OPENS THE STORE_FILE. IF NOT EXISTS CREATES IT
@@ -150,42 +150,42 @@ class OrderManager:
 
         file_store = self.store_path + "/Almacen.JSON"
         if not os.path.isfile(file_store):
-            raise order_management_exception.OrderManagementException("There isn't any store")
+            raise OrderManagementException("There isn't any store")
         try:
             with open(file_store, "r", encoding="utf8") as file:
                 data_list = json.load(file)
         except FileNotFoundError as ex:
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Wrong file or file path") from ex
         except json.JSONDecodeError as ex:
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("JSON Decode Error - Wrong JSON Format") from ex
 
         try:
             with open(input_file, "r", encoding="utf8") as file:
                 dicc_json = json.load(file)
         except FileNotFoundError as ex:
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Wrong file or file path") from ex
         except json.JSONDecodeError as ex:
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("JSON Decode Error - Wrong JSON Format") from ex
 
         if len(tuple(dicc_json.keys())) != 2:
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("There are too/few keys")
         if tuple(dicc_json.keys())[0] != "OrderID":
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Incorrect keys")
         if tuple(dicc_json.keys())[1] != "ContactEmail":
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Incorrect keys")
         if not re.fullmatch('^[0-9|a-f]{32}$', dicc_json["OrderID"]):
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Wrong Hash")
         if not re.fullmatch('^[0-9|a-z][0-9|a-z]*[@][0-9|a-z][0-9|a-z]*'
                             '[.][0-9|a-z][0-9|a-z]*$', dicc_json["ContactEmail"]):
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Wrong Contact Email")
 
         try:
@@ -195,16 +195,16 @@ class OrderManager:
                     order_id = item["_OrderRequest__order_id"]
                     delivery_email = dicc_json["ContactEmail"]
                     order_type = item["_OrderRequest__order_type"]
-                    print(order_shipping.OrderShipping
+                    print(OrderShipping
                           (product_id, order_id, delivery_email, order_type))
-                    ord_shi = order_shipping.OrderShipping\
+                    ord_shi = OrderShipping\
                         (product_id, order_id, delivery_email, order_type)
                     out = ord_shi.tracking_code
                     print("out =" + str(out))
                     with open(self.store_path + "/Almacen.JSON", "w",
                               encoding="utf-8", newline="") as file:
                         json.dump(data_list, file, indent=2)
-                    req = order_request.OrderRequest(product_id, order_type,
+                    req = OrderRequest(product_id, order_type,
                                                      item["_OrderRequest__delivery_address"],
                                                      item["_OrderRequest__phone_number"],
                                                      item["_OrderRequest__zip_code"])
@@ -212,7 +212,7 @@ class OrderManager:
                     real_hash = req.order_id
 
                     if real_hash != dicc_json["OrderID"]:
-                        raise order_management_exception.OrderManagementException\
+                        raise OrderManagementException\
                             ("The hash has been manipulated")
 
                     dicc_salida = ord_shi.__dict__
@@ -231,30 +231,30 @@ class OrderManager:
                         json.dump(salida_list, file, indent=2)
                     return out
         except:
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Your OrderId doesn't exist")
     def send_product(self,tracking_number):
         file_store = self.store_path + "/Almacenf2.JSON"
         if not os.path.isfile(file_store):
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("There isn't any store")
         if not re.fullmatch('^[0-9|a-f]{64}$', tracking_number):
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Wrong Hash")
         try:
             with open(file_store, "r", encoding="utf8") as file:
                 data_list = json.load(file)
         except FileNotFoundError as ex:
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("Wrong file or file path") from ex
         except json.JSONDecodeError as ex:
-            raise order_management_exception.OrderManagementException\
+            raise OrderManagementException\
                 ("JSON Decode Error - Wrong JSON Format") from ex
         for item in data_list:
             if item["_OrderShipping__tracking_code_"] == tracking_number:
                 if item["_OrderShipping_delivery_day_"] != \
                         datetime.timestamp(datetime.utcnow()):
-                    raise order_management_exception.OrderManagementException\
+                    raise OrderManagementException\
                         ("The delivery day isn't today")
 
                 dicc_salida = {}

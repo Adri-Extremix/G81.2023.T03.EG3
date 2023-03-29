@@ -5,7 +5,7 @@ import os
 from freezegun import freeze_time
 from uc3m_logistics import order_manager, order_management_exception
 
-path = os.path.dirname(__file__)[:41]
+path = os.path.dirname(__file__)[:-15]
 path += "json/Almacen.JSON"
 print(path)
 @freeze_time("01-01-2000")
