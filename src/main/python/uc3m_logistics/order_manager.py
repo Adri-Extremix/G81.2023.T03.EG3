@@ -158,6 +158,7 @@ class OrderManager:
             raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
         except json.JSONDecodeError as ex:
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
         claves = tuple(dicc_json.keys())
         print(claves)
         if len(claves) != 2:
@@ -184,8 +185,7 @@ class OrderManager:
                     out = ord_shi.tracking_code
                     print("out =" + str(out))
                     ##################Falta escribir el tracking code = out en el almacén / Hecho
-                    item["_OrderRequest__delivery_day_"] = ord_shi.delivery_day
-                    item["_OrderRequest__tracking_code_"] = out
+
                     with open(self.store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
                         json.dump(data_list, file, indent=2)
                     req = order_request.OrderRequest(product_id, order_type,
@@ -197,11 +197,26 @@ class OrderManager:
 
                     if real_hash != dicc_json["OrderID"]:
                         raise order_management_exception.OrderManagementException("The hash has been manipulated")
+
+                    dicc_salida = ord_shi.__dict__
+
+                    try:
+                        with open(self.store_path + "/Almacenf2.JSON", "r", encoding="utf-8") as file:
+                            salida_list = json.load(file)
+                    except FileNotFoundError:
+                        salida_list = []
+
+                    ## adds the hash to the file
+                    salida_list.append(dicc_salida)
+
+                    # WRITES EVERYTTHING ON STORE_FILE
+                    with open(self.store_path + "/Almacenf2.JSON", "w", encoding="utf-8", newline="") as file:
+                        json.dump(salida_list, file, indent=2)
                     return out
         except:
             raise order_management_exception.OrderManagementException("Your OrderId doesn't exist")
     def send_product(self,tracking_number):
-        file_store = self.store_path + "/Almacen.JSON"
+        file_store = self.store_path + "/Almacenf2.JSON"
         if not os.path.isfile(file_store):
             raise order_management_exception.OrderManagementException("There isn't any store")
         if not re.fullmatch('^[0-9|a-f]{64}$', tracking_number):
@@ -214,12 +229,25 @@ class OrderManager:
         except json.JSONDecodeError as ex:
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format")
         for item in data_list:
-            if item["_OrderRequest__tracking_code_"] == tracking_number:
-                if item["_OrderRequest_delivery_day_"] != datetime.timestamp(datetime.utcnow()):
+            if item["_OrderShipping__tracking_code_"] == tracking_number:
+                if item["_OrderShipping_delivery_day_"] != datetime.timestamp(datetime.utcnow()):
                     raise order_management_exception.OrderManagementException("The delivery day isn't today")
-                with open(self.store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+
+                dicc_salida = {}
+                dicc_salida["Delivery_day_"] = item["_OrderShipping_delivery_day_"]
+                dicc_salida["Tracking_code_"] = tracking_number
+
+                try:
+                    with open(self.store_path + "/Almacenf3.JSON", "r", encoding="utf-8") as file:
+                        salida_list = json.load(file)
+                except FileNotFoundError:
+                    salida_list = []
+                salida_list.append(dicc_salida)
+
+                with open(self.store_path + "/Almacenf3.JSON", "w", encoding="utf-8", newline="") as file:
                     json.dump(data_list, file, indent=2)
 
-
+                return True
+        return False
 
 

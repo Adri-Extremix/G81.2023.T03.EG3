@@ -1,6 +1,7 @@
 """Contains the class OrderShipping"""
 from datetime import datetime
 import hashlib
+import json
 from freezegun import freeze_time
 class OrderShipping():
     """Class representing the information required for shipping of an order"""
@@ -23,6 +24,10 @@ class OrderShipping():
         #__delivery_day must be expressed in senconds to be added to the timestap
         self.__delivery_day = self.__issued_at + (delivery_days * 24 * 60 * 60)
         self.__tracking_code = self.tracking_code
+
+        def __str__(self):
+            return "OrderRequest:" + json.dumps(self.__dict__)
+
     def __signature_string(self):
         """Composes the string to be used for generating the key for the date"""
         return "{alg:" + self.__alg +",typ:" + self.__type +",order_id:" + \
