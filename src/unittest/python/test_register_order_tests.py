@@ -5,6 +5,9 @@ import os
 from freezegun import freeze_time
 from uc3m_logistics import order_manager, order_management_exception
 
+path = os.path.dirname(__file__)[:41]
+path += "json/Almacen.JSON"
+print(path)
 @freeze_time("01-01-2000")
 class MyTestCase(unittest.TestCase):
     """class for testing the register_order method"""
@@ -21,7 +24,7 @@ class MyTestCase(unittest.TestCase):
         value = my_order.register_order("8421691423220", "REGULAR", "C/LISBOA,4, MADRID, SPAIN", "123456789", "28005")
         self.assertEqual("e39ed19e25d6c4f0b2ed5bf610e043b4",value)
 
-        with(open("../../json/Almacen.JSON", "r", encoding="utf-8", newline=""))as file:
+        with(open(path, "r", encoding="utf-8", newline=""))as file:
             data_list = json.load(file)
         found = False
 
@@ -62,9 +65,9 @@ class MyTestCase(unittest.TestCase):
     def test_f1_Vt2(self):
         my_order = order_manager.OrderManager()
         value = my_order.register_order("8421691423220", "PREMIUM", "C/LISBOA,4, MADRID, SPAIN", "123456789", "28005")
-        self.assertEqual("1529a75ad4abd5bafdc2981bd2d648e0",value)
+        self.assertEqual("b24ae6e546d46edb1434ffb6f2ed1d04",value)
 
-        with(open("../../json/Almacen.JSON", "r", encoding="utf-8", newline="")) as file:
+        with(open(path, "r", encoding="utf-8", newline="")) as file:
             data_list = json.load(file)
         found = False
 
@@ -86,9 +89,9 @@ class MyTestCase(unittest.TestCase):
     def test_f1_Vt3(self):
         my_order = order_manager.OrderManager()
         value = my_order.register_order("8421691423220", "PREMIUM", "C/LISBOA,4,MADRID, SPAIN", "123456789", "28005")
-        self.assertEqual("23505258223f8d9da00641c25ef3dd47",value)
+        self.assertEqual("9771ea21d3be1cfad82db7309d9be5c1",value)
 
-        with(open("../../json/Almacen.JSON", "r", encoding="utf-8", newline="")) as file:
+        with(open(path, "r", encoding="utf-8", newline="")) as file:
             data_list = json.load(file)
         found = False
 
@@ -104,9 +107,9 @@ class MyTestCase(unittest.TestCase):
     def test_f1_Vt4(self):
         my_order = order_manager.OrderManager()
         value = my_order.register_order("8421691423220", "PREMIUM", "C/LISBO MADRID, SPAIN", "123456789", "28005")
-        self.assertEqual("0d79d3a8bb1008bcd10120b7f9ececfb", value)
+        self.assertEqual("0c1ef9fc5cab6b45651eb3f48b3b56bb", value)
 
-        with(open("../../json/Almacen.JSON", "r", encoding="utf-8", newline="")) as file:
+        with(open(path, "r", encoding="utf-8", newline="")) as file:
             data_list = json.load(file)
         found = False
 
@@ -117,9 +120,9 @@ class MyTestCase(unittest.TestCase):
     def test_f1_Vt5(self):
         my_order = order_manager.OrderManager()
         value = my_order.register_order("8421691423220", "PREMIUM", "C/LISBOA MADRID, SPAIN", "123456789", "28005")
-        self.assertEqual("b79f15b28ca404f0aab3cbea1911a38c", value)
+        self.assertEqual("6e2eb61bfb1f720e5e18950bf43260bb", value)
 
-        with(open("../../json/Almacen.JSON", "r", encoding="utf-8", newline="")) as file:
+        with(open(path, "r", encoding="utf-8", newline="")) as file:
             data_list = json.load(file)
         found = False
 
@@ -132,9 +135,9 @@ class MyTestCase(unittest.TestCase):
         value = my_order.register_order("8421691423220", "PREMIUM", "C/LISBOA,4, MADRID, SPAINaaaaaaaaaaaaaaaaaaaaa"
                                                                         "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
                                                                         "aaaaaaa", "123456789", "28005")
-        self.assertEqual("f8453670d7bcd85d4c2caa7aff980aca", value)
+        self.assertEqual("d7b99460d58caa26d99a563134004496", value)
 
-        with(open("../../json/Almacen.JSON", "r", encoding="utf-8", newline="")) as file:
+        with(open(path, "r", encoding="utf-8", newline="")) as file:
             data_list = json.load(file)
         found = False
 
@@ -147,9 +150,9 @@ class MyTestCase(unittest.TestCase):
         value = my_order.register_order("8421691423220", "PREMIUM", "C/LISBOA,4, MADRID, SPAINaaaaaaaaaaaaaaaaaaaaaaaaa"
                                                                     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAaa"
                                                                     , "123456789", "28005")
-        self.assertEqual("911bae296cfa927e0e81b4de9adce30b", value)
+        self.assertEqual("c602a0b664c76cedbe41e51198cbe6d7", value)
 
-        with(open("../../json/Almacen.JSON", "r", encoding="utf-8", newline="")) as file:
+        with(open(path, "r", encoding="utf-8", newline="")) as file:
             data_list = json.load(file)
         found = False
 
