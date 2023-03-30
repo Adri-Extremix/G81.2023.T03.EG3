@@ -244,21 +244,23 @@ class OrderManager:
         try:
             with open(file_store, "r", encoding="utf8") as file:
                 data_list = json.load(file)
-        except FileNotFoundError as ex:
-            raise OrderManagementException\
-                ("Wrong file or file path") from ex
         except json.JSONDecodeError as ex:
             raise OrderManagementException\
                 ("JSON Decode Error - Wrong JSON Format") from ex
+        except FileNotFoundError as ex:
+            raise OrderManagementException\
+                ("Wrong file or file path") from ex
+
         for item in data_list:
-            if item["_OrderShipping__tracking_code_"] == tracking_number:
-                if item["_OrderShipping_delivery_day_"] != \
+            if item["_OrderShipping__tracking_code"] == tracking_number:
+                if item["_OrderShipping__delivery_day"] != \
                         datetime.timestamp(datetime.utcnow()):
+                    print(datetime.timestamp(datetime.utcnow()))
                     raise OrderManagementException\
                         ("The delivery day isn't today")
 
                 dicc_salida = {}
-                dicc_salida["Delivery_day_"] = item["_OrderShipping_delivery_day_"]
+                dicc_salida["Delivery_day_"] = item["_OrderShipping__delivery_day"]
                 dicc_salida["Tracking_code_"] = tracking_number
 
                 try:
