@@ -13,6 +13,8 @@ class OrderManager:
     """Class for providing the methods for managing the orders"""
 
     def init(self):
+        """init"""
+        # pylint: disable-next=unnecessary-pass
         pass
 
     @staticmethod
@@ -47,7 +49,7 @@ class OrderManager:
 
     @staticmethod
     def validate_address(address):
-        """ """
+        """method that validate the address"""
         if len(address) < 20 or len(address) > 100:
             return False
         cont_sp = 0
@@ -62,13 +64,14 @@ class OrderManager:
 
     @property
     def store_path(self):
+        """Return the relative path"""
         # Path
         path = os.path.dirname(__file__)
         path = path[:-26]
         return os.path.join(path, "json")
 
     def register_order(self, product_id, order_type, address, phone_number, zip_code):
-
+        """Method 1"""
         # INPUT VALIDATION
         if not isinstance(product_id, str):
 
@@ -112,12 +115,12 @@ class OrderManager:
         if not isinstance(zip_code, str):
             raise OrderManagementException\
                 ("Exception : zipcode type not valid")
-        if (len(zip_code) != 5):
+        if len(zip_code) != 5:
             raise OrderManagementException\
                 ("Exception : zipcode not valid")
         try:
             aux_zip_code = int(zip_code)
-            if (not (1000 <= aux_zip_code < 53000)):
+            if not 1000 <= aux_zip_code < 53000:
                 raise OrderManagementException\
                     ("Exception : zipcode doesn't exists")
         except:
@@ -147,7 +150,7 @@ class OrderManager:
         return out
 
     def send_code(self, input_file):
-
+        """Method 2"""
         file_store = self.store_path + "/Almacen.JSON"
         if not os.path.isfile(file_store):
             raise OrderManagementException("There isn't any store")
@@ -171,10 +174,12 @@ class OrderManager:
             raise OrderManagementException\
                 ("JSON Decode Error - Wrong JSON Format") from ex
 
-        if len(tuple(dicc_json.keys())) != 2:
+        claves = tuple(dicc_json.keys())
+
+        if len(claves) != 2:
             raise OrderManagementException\
                 ("There are too/few keys")
-        if tuple(dicc_json.keys())[0] != "OrderID":
+        if tuple(claves)[0] != "OrderID":
             raise OrderManagementException\
                 ("Incorrect keys")
         if tuple(dicc_json.keys())[1] != "ContactEmail":
@@ -195,12 +200,9 @@ class OrderManager:
                     order_id = item["_OrderRequest__order_id"]
                     delivery_email = dicc_json["ContactEmail"]
                     order_type = item["_OrderRequest__order_type"]
-                    print(OrderShipping
-                          (product_id, order_id, delivery_email, order_type))
                     ord_shi = OrderShipping\
                         (product_id, order_id, delivery_email, order_type)
                     out = ord_shi.tracking_code
-                    print("out =" + str(out))
                     with open(self.store_path + "/Almacen.JSON", "w",
                               encoding="utf-8", newline="") as file:
                         json.dump(data_list, file, indent=2)
@@ -234,6 +236,7 @@ class OrderManager:
             raise OrderManagementException\
                 ("Your OrderId doesn't exist")
     def send_product(self,tracking_number):
+        """Method 3"""
         file_store = self.store_path + "/Almacenf2.JSON"
         if not os.path.isfile(file_store):
             raise OrderManagementException\
@@ -255,7 +258,6 @@ class OrderManager:
             if item["_OrderShipping__tracking_code"] == tracking_number:
                 if item["_OrderShipping__delivery_day"] != \
                         datetime.timestamp(datetime.utcnow()):
-                    print(datetime.timestamp(datetime.utcnow()))
                     raise OrderManagementException\
                         ("The delivery day isn't today")
 
@@ -276,5 +278,3 @@ class OrderManager:
 
                 return True
         return False
-
-

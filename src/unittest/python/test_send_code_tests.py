@@ -2,10 +2,9 @@
 import json
 import unittest
 import os
-from pathlib import Path
 from freezegun import freeze_time
 from uc3m_logistics import order_manager, order_management_exception
-from uc3m_logistics import order_request
+
 
 store_path = os.path.dirname(__file__)[:-15] + "json"
 print("path: " + store_path)
@@ -69,13 +68,13 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
     def test_f2_NVt2(self):
         """deletion de format"""
-        input_file = store_path + "/f2_nvt3.json"
+        input_file = store_path + "/f2_nvt2.json"
         # Orden de ejemplo en el almacen
         dicc_json = []
         order_ex = {"_OrderRequest__product_id": "8421691423220",
@@ -95,9 +94,9 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
     def test_f2_NVt3(self):
         """duplication de llavein"""
@@ -121,9 +120,9 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
     def test_f2_NVt4(self):
         """deletion de llavein"""
@@ -147,9 +146,9 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
     def test_f2_NVt5(self):
         """dup de datos"""
@@ -173,9 +172,9 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
     def test_f2_NVt6(self):
         """del de datos"""
@@ -199,9 +198,9 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("There are too/few keys", cm.exception.message)
+        self.assertEqual("There are too/few keys", cm_ex.exception.message)
 
     def test_f2_NVt7(self):
         """dup llavefin"""
@@ -225,9 +224,9 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
     def test_f2_NVt8(self):
         """del llavefin"""
@@ -251,9 +250,9 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
     def test_f2_NVt9(self):
         """mod de llave inicio"""
@@ -277,9 +276,9 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
     def test_f2_NVt10(self):
         """dup de parte1"""
@@ -303,9 +302,9 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
     def test_f2_NVt11(self):
         """del de parte1"""
@@ -329,9 +328,9 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("There are too/few keys", cm.exception.message)
+        self.assertEqual("There are too/few keys", cm_ex.exception.message)
 
     def test_f2_NVt12(self):
         """dup de comma"""
@@ -355,9 +354,9 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
     def test_f2_NVt13(self):
         """del de comma"""
         input_file = store_path + "/f2_nvt13.json"
@@ -380,11 +379,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt14(self):
+    def test_f2_nvt14(self):
         """dup de parte2"""
         input_file = store_path + "/f2_nvt14.json"
         # Orden de ejemplo en el almacen
@@ -406,10 +405,10 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
-    def test_f2_NVt15(self):
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
+    def test_f2_nvt15(self):
         """del de parte2"""
         input_file = store_path + "/f2_nvt15.json"
         # Orden de ejemplo en el almacen
@@ -431,11 +430,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("There are too/few keys", cm.exception.message)
+        self.assertEqual("There are too/few keys", cm_ex.exception.message)
 
-    def test_f2_NVt16(self):
+    def test_f2_nvt16(self):
         """mod de }"""
         input_file = store_path + "/f2_nvt16.json"
         # Orden de ejemplo en el almacen
@@ -457,11 +456,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt17(self):
+    def test_f2_nvt17(self):
         """dup etiqueta1"""
         input_file = store_path + "/f2_nvt17.json"
         # Orden de ejemplo en el almacen
@@ -483,11 +482,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt18(self):
+    def test_f2_nvt18(self):
         """del etiqueta1"""
         input_file = store_path + "/f2_nvt18.json"
         # Orden de ejemplo en el almacen
@@ -509,11 +508,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt19(self):
+    def test_f2_nvt19(self):
         """dup separador"""
         input_file = store_path + "/f2_nvt19.json"
         # Orden de ejemplo en el almacen
@@ -535,11 +534,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt20(self):
+    def test_f2_nvt20(self):
         """del separador"""
         input_file = store_path + "/f2_nvt20.json"
         # Orden de ejemplo en el almacen
@@ -561,11 +560,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt21(self):
+    def test_f2_nvt21(self):
         """dup dato1"""
         input_file = store_path + "/f2_nvt21.json"
         # Orden de ejemplo en el almacen
@@ -587,11 +586,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt22(self):
+    def test_f2_nvt22(self):
         """del dato1"""
         input_file = store_path + "/f2_nvt22.json"
         # Orden de ejemplo en el almacen
@@ -613,11 +612,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt23(self):
+    def test_f2_nvt23(self):
         """mod coma"""
         input_file = store_path + "/f2_nvt23.json"
         # Orden de ejemplo en el almacen
@@ -639,11 +638,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt24(self):
+    def test_f2_nvt24(self):
         """dup etiqueta2"""
         input_file = store_path + "/f2_nvt24.json"
         # Orden de ejemplo en el almacen
@@ -665,11 +664,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt25(self):
+    def test_f2_nvt25(self):
         """dup separador"""
         input_file = store_path + "/f2_nvt25.json"
         # Orden de ejemplo en el almacen
@@ -691,11 +690,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt26(self):
+    def test_f2_nvt26(self):
         """dup separador"""
         input_file = store_path + "/f2_nvt26.json"
         # Orden de ejemplo en el almacen
@@ -717,11 +716,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt27(self):
+    def test_f2_nvt27(self):
         """dup separador"""
         input_file = store_path + "/f2_nvt27.json"
         # Orden de ejemplo en el almacen
@@ -743,11 +742,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt28(self):
+    def test_f2_nvt28(self):
         """dup separador"""
         input_file = store_path + "/f2_nvt28.json"
         # Orden de ejemplo en el almacen
@@ -769,11 +768,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt29(self):
+    def test_f2_nvt29(self):
         """dup separador"""
         input_file = store_path + "/f2_nvt29.json"
         # Orden de ejemplo en el almacen
@@ -795,11 +794,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt30(self):
+    def test_f2_nvt30(self):
         """dup separador"""
         input_file = store_path + "/f2_nvt30.json"
         # Orden de ejemplo en el almacen
@@ -821,11 +820,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Incorrect keys", cm.exception.message)
+        self.assertEqual("Incorrect keys", cm_ex.exception.message)
 
-    def test_f2_NVt31(self):
+    def test_f2_nvt31(self):
         """dup separador"""
         input_file = store_path + "/f2_nvt31.json"
         # Orden de ejemplo en el almacen
@@ -847,11 +846,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Incorrect keys", cm.exception.message)
+        self.assertEqual("Incorrect keys", cm_ex.exception.message)
 
-    def test_f2_NVt32(self):
+    def test_f2_nvt32(self):
         """dup separador"""
         input_file = store_path + "/f2_nvt32.json"
         # Orden de ejemplo en el almacen
@@ -873,11 +872,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt33(self):
+    def test_f2_nvt33(self):
         """dup separador"""
         input_file = store_path + "/f2_nvt33.json"
         # Orden de ejemplo en el almacen
@@ -899,10 +898,10 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Wrong Hash", cm.exception.message)
-    def test_f2_NVt34(self):
+        self.assertEqual("Wrong Hash", cm_ex.exception.message)
+    def test_f2_nvt34(self):
         """dup separador"""
         input_file = store_path + "/f2_nvt34.json"
         # Orden de ejemplo en el almacen
@@ -924,11 +923,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Wrong Hash", cm.exception.message)
+        self.assertEqual("Wrong Hash", cm_ex.exception.message)
 
-    def test_f2_NVt35(self):
+    def test_f2_nvt35(self):
         """dup separador"""
         input_file = store_path + "/f2_nvt35.json"
         # Orden de ejemplo en el almacen
@@ -950,11 +949,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Incorrect keys", cm.exception.message)
+        self.assertEqual("Incorrect keys", cm_ex.exception.message)
 
-    def test_f2_NVt36(self):
+    def test_f2_nvt36(self):
         """dup separador"""
         input_file = store_path + "/f2_nvt36.json"
         # Orden de ejemplo en el almacen
@@ -976,11 +975,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Incorrect keys", cm.exception.message)
+        self.assertEqual("Incorrect keys", cm_ex.exception.message)
 
-    def test_f2_NVt37(self):
+    def test_f2_nvt37(self):
         """dup separador"""
         input_file = store_path + "/f2_nvt37.json"
         # Orden de ejemplo en el almacen
@@ -1002,11 +1001,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_Vt2(self):
+    def test_f2_vt2(self):
         input_file = store_path + "/f2_vt2.json"
         # Orden de ejemplo en el almacen
         dicc_json = []
@@ -1032,7 +1031,7 @@ class MyTestCase(unittest.TestCase):
         value = my_order.send_code(input_file)
         self.assertEqual("5856fbd8f18ad8381d45e0efe946025037a3dfe689f285c1dab0b48ef91df0f0", value)
 
-    def test_f2_NVt38(self):
+    def test_f2_nvt38(self):
         """del idmail"""
         input_file = store_path + "/f2_nvt38.json"
         # Orden de ejemplo en el almacen
@@ -1054,11 +1053,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Wrong Contact Email", cm.exception.message)
+        self.assertEqual("Wrong Contact Email", cm_ex.exception.message)
 
-    def test_f2_NVt39(self):
+    def test_f2_nvt39(self):
         """dup arroba"""
         input_file = store_path + "/f2_nvt39.json"
         # Orden de ejemplo en el almacen
@@ -1080,10 +1079,10 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Wrong Contact Email", cm.exception.message)
-    def test_f2_NVt40(self):
+        self.assertEqual("Wrong Contact Email", cm_ex.exception.message)
+    def test_f2_nvt40(self):
         """del @"""
         input_file = store_path + "/f2_nvt40.json"
         # Orden de ejemplo en el almacen
@@ -1105,11 +1104,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Wrong Contact Email", cm.exception.message)
+        self.assertEqual("Wrong Contact Email", cm_ex.exception.message)
 
-    def test_f2_Vt3(self):
+    def test_f2_vt3(self):
         """dup dominio"""
         input_file = store_path + "/f2_vt3.json"
         # Orden de ejemplo en el almacen
@@ -1136,7 +1135,7 @@ class MyTestCase(unittest.TestCase):
         value = my_order.send_code(input_file)
         self.assertEqual("5856fbd8f18ad8381d45e0efe946025037a3dfe689f285c1dab0b48ef91df0f0", value)
 
-    def test_f2_NVt41(self):
+    def test_f2_nvt41(self):
         """del dominio"""
         input_file = store_path + "/f2_nvt41.json"
         # Orden de ejemplo en el almacen
@@ -1158,11 +1157,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Wrong Contact Email", cm.exception.message)
+        self.assertEqual("Wrong Contact Email", cm_ex.exception.message)
 
-    def test_f2_NVt42(self):
+    def test_f2_nvt42(self):
         """dup ."""
         input_file = store_path + "/f2_nvt42.json"
         # Orden de ejemplo en el almacen
@@ -1184,11 +1183,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Wrong Contact Email", cm.exception.message)
+        self.assertEqual("Wrong Contact Email", cm_ex.exception.message)
 
-    def test_f2_NVt43(self):
+    def test_f2_nvt43(self):
         """del ."""
         input_file = store_path + "/f2_nvt43.json"
         # Orden de ejemplo en el almacen
@@ -1210,11 +1209,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Wrong Contact Email", cm.exception.message)
+        self.assertEqual("Wrong Contact Email", cm_ex.exception.message)
 
-    def test_f2_NVt44(self):
+    def test_f2_nvt44(self):
         """mod ."""
         input_file = store_path + "/f2_nvt44.json"
         # Orden de ejemplo en el almacen
@@ -1236,11 +1235,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Wrong Contact Email", cm.exception.message)
+        self.assertEqual("Wrong Contact Email", cm_ex.exception.message)
 
-    def test_f2_Vt4(self):
+    def test_f2_vt4(self):
         """dup extension"""
         input_file = store_path + "/f2_vt4.json"
         # Orden de ejemplo en el almacen
@@ -1267,7 +1266,7 @@ class MyTestCase(unittest.TestCase):
         value = my_order.send_code(input_file)
         self.assertEqual("5856fbd8f18ad8381d45e0efe946025037a3dfe689f285c1dab0b48ef91df0f0", value)
 
-    def test_f2_NVt46(self):
+    def test_f2_nvt46(self):
         """mod \" """
         input_file = store_path + "/f2_nvt46.json"
         # Orden de ejemplo en el almacen
@@ -1289,11 +1288,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm.exception.message)
+        self.assertEqual("JSON Decode Error - Wrong JSON Format", cm_ex.exception.message)
 
-    def test_f2_NVt47(self):
+    def test_f2_nvt47(self):
         """mod OrderID """
         input_file = store_path + "/f2_nvt47.json"
         # Orden de ejemplo en el almacen
@@ -1315,11 +1314,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Incorrect keys", cm.exception.message)
+        self.assertEqual("Incorrect keys", cm_ex.exception.message)
 
-    def test_f2_NVt48(self):
+    def test_f2_nvt48(self):
         """mod id """
         input_file = store_path + "/f2_nvt48.json"
         # Orden de ejemplo en el almacen
@@ -1341,11 +1340,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Wrong Hash", cm.exception.message)
+        self.assertEqual("Wrong Hash", cm_ex.exception.message)
 
-    def test_f2_NVt49(self):
+    def test_f2_nvt49(self):
         """mod ContactEmail"""
         input_file = store_path + "/f2_nvt49.json"
         # Orden de ejemplo en el almacen
@@ -1367,11 +1366,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Incorrect keys", cm.exception.message)
+        self.assertEqual("Incorrect keys", cm_ex.exception.message)
 
-    def test_f2_NVt50(self):
+    def test_f2_nvt50(self):
         """mod email"""
         input_file = store_path + "/f2_nvt50.json"
         # Orden de ejemplo en el almacen
@@ -1393,11 +1392,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Wrong Contact Email", cm.exception.message)
+        self.assertEqual("Wrong Contact Email", cm_ex.exception.message)
 
-    def test_f2_NVt51(self):
+    def test_f2_nvt51(self):
         """mod @"""
         input_file = store_path + "/f2_nvt51.json"
         # Orden de ejemplo en el almacen
@@ -1419,11 +1418,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Wrong Contact Email", cm.exception.message)
+        self.assertEqual("Wrong Contact Email", cm_ex.exception.message)
 
-    def test_f2_NVt52(self):
+    def test_f2_nvt52(self):
         """mod dominio"""
         input_file = store_path + "/f2_nvt52.json"
         # Orden de ejemplo en el almacen
@@ -1445,11 +1444,11 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Wrong Contact Email", cm.exception.message)
+        self.assertEqual("Wrong Contact Email", cm_ex.exception.message)
 
-    def test_f2_NVt53(self):
+    def test_f2_nvt53(self):
         """mod extension"""
         input_file = store_path + "/f2_nvt53.json"
         # Orden de ejemplo en el almacen
@@ -1471,9 +1470,9 @@ class MyTestCase(unittest.TestCase):
             raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
         my_order = order_manager.OrderManager()
-        with self.assertRaises(order_management_exception.OrderManagementException) as cm:
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
             my_order.send_code(input_file)
-        self.assertEqual("Wrong Contact Email", cm.exception.message)
+        self.assertEqual("Wrong Contact Email", cm_ex.exception.message)
 
 if __name__ == '__main__':
     unittest.main()
