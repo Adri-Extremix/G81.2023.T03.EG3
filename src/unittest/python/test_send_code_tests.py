@@ -1265,6 +1265,31 @@ class MyTestCase(unittest.TestCase):
         ########## Falta dar la dirección del json
         value = my_order.send_code(input_file)
         self.assertEqual("5856fbd8f18ad8381d45e0efe946025037a3dfe689f285c1dab0b48ef91df0f0", value)
+    def test_f2_nvt45(self):
+        """del extension """
+        input_file = store_path + "/f2_nvt45.json"
+        # Orden de ejemplo en el almacen
+        dicc_json = []
+        order_ex = {"_OrderRequest__product_id": "8421691423220",
+                    "_OrderRequest__delivery_address": "C/LISBOA,4, MADRID, SPAIN",
+                    "_OrderRequest__order_type": "REGULAR",
+                    "_OrderRequest__phone_number": "123456789",
+                    "_OrderRequest__zip_code": "28005",
+                    "_OrderRequest__time_stamp": 946684800.0,
+                    "_OrderRequest__order_id": "e39ed19e25d6c4f0b2ed5bf610e043b4"}
+        dicc_json.append(order_ex)
+        try:
+            with open(store_path + "/Almacen.JSON", "w", encoding="utf-8", newline="") as file:
+                json.dump(dicc_json, file, indent=2)
+        except FileNotFoundError as ex:
+            raise order_management_exception.OrderManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise order_management_exception.OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
+        my_order = order_manager.OrderManager()
+        with self.assertRaises(order_management_exception.OrderManagementException) as cm_ex:
+            my_order.send_code(input_file)
+        self.assertEqual("Wrong Contact Email", cm_ex.exception.message)
 
     def test_f2_nvt46(self):
         """mod \" """

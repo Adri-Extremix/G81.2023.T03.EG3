@@ -250,9 +250,6 @@ class OrderManager:
         except json.JSONDecodeError as ex:
             raise OrderManagementException\
                 ("JSON Decode Error - Wrong JSON Format") from ex
-        except FileNotFoundError as ex:
-            raise OrderManagementException\
-                ("Wrong file or file path") from ex
 
         for item in data_list:
             if item["_OrderShipping__tracking_code"] == tracking_number:
